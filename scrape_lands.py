@@ -3,16 +3,8 @@ from datetime import datetime, timedelta
 import random
 from bs4 import BeautifulSoup
 import requests
-from pymongo import MongoClient
-from pymongo.server_api import ServerApi
 from retry import retry
-
-# MongoDB's connection
-# root - is the username and 1234567890 - is the password
-uri = "mongodb+srv://root:1234567890@atlascluster.hpyo9qg.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster"
-client = MongoClient(uri, server_api=ServerApi('1'))
-db = client['real_estate']  # Replace with yours database name
-collection = db['data']  # Replace with yours collection name
+from config import collection
 
 # Website to scrape
 base_website = "https://www.realtor.com/realestateandhomes-search/Makawao_HI"
@@ -123,9 +115,9 @@ def main():
 
         # Get the size of the apartment
         size_el = soup.find('span', class_='meta-value')
-        size = float(size_el.getText(strip=True).replace(',', '.')) if size_el else 'N/A'
+        size = float(size_el.getText(strip=True).replace(',', '')) if size_el else 'N/A'
 
-        if size is float:  # If size is in acres
+        if size < 3:  # If size is in acres
             size = round(float(size) * 43560, 2)  # Convert acres to sqft
 
         date = get_listed_date(soup)
@@ -143,7 +135,7 @@ def main():
         collection.insert_one(apartment)
 
         # Delay after a land scraping
-        time.sleep(2)
+        time.sleep(1)
     print('Data has been scraped successfully!')
 
 
