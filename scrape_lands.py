@@ -7,16 +7,17 @@ from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 from retry import retry
 
-# MongoDB connection
+# MongoDB's connection
+# root - is the username and 1234567890 - is the password
 uri = "mongodb+srv://root:1234567890@atlascluster.hpyo9qg.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster"
 client = MongoClient(uri, server_api=ServerApi('1'))
-db = client['real_estate']
-collection = db['data']
+db = client['real_estate']  # Replace with yours database name
+collection = db['data']  # Replace with yours collection name
 
 # Website to scrape
 base_website = "https://www.realtor.com/realestateandhomes-search/Makawao_HI"
 
-# Replace the headers with yours ( https://httpbin.org/get )
+# User Agents to rotate to avoid getting blocked
 user_agents = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0",
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0",
@@ -51,13 +52,18 @@ def get_data(url, headers, proxy):
         return soup
 
 
+# Get the date the apartment was listed
 def get_listed_date(soup):
+    # Find a when the land was posted
     days_el1 = soup.find('span', string='Time on Realtor.com')
     days_el = days_el1.find_next('div')
+    # Get only days
     days_ago = days_el.getText(strip=True).split(' ') if days_el else 'N/A'
+    # Calculate the date when it was listed
     date = datetime.now() - timedelta(days=int(days_ago[0]))
 
-    return date.strftime('%d-%m-%y')
+    # Return the date in the format dd-mm-yy
+    return date.strftime('%d-%m-%Y')
 
 
 # Handle pagination
@@ -75,13 +81,17 @@ def main():
         "Dnt": "1",
         "Upgrade-Insecure-Requests": "1",
     }
+    # Rotate proxies
     proxy = {"http": random.choice(proxies)}
     next_page = base_website
 
+    # Redirecting to the next pages
     while next_page:
         soup = get_data(next_page, headers, proxy)
         if soup is None:  # If you're not allowed to scrape the page, skip it
             continue
+
+        # Find all "cards" of the apartments
         list_of_apartments = soup.find_all('div', class_='BasePropertyCard_propertyCardWrap__30VCU')
 
         # Iterate through apartments
@@ -113,7 +123,8 @@ def main():
         # Get the size of the apartment
         size_el = soup.find('span', class_='meta-value')
         size = float(size_el.getText(strip=True).replace(',', '.')) if size_el else 'N/A'
-        if size < 5:
+
+        if size is float:  # If size is in acres
             size = round(float(size) * 43560, 2)  # Convert acres to sqft
 
         date = get_listed_date(soup)
@@ -130,6 +141,7 @@ def main():
         # Insert the apartment into the collection
         collection.insert_one(apartment)
 
+        # Delay after a land scraping
         time.sleep(2)
     print('Data has been scraped successfully!')
 
