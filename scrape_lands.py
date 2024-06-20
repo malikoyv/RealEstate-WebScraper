@@ -1,9 +1,11 @@
+import time
 from datetime import datetime, timedelta
 import random
 from bs4 import BeautifulSoup
 import requests
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
+from retry import retry
 
 # MongoDB connection
 uri = "mongodb+srv://root:1234567890@atlascluster.hpyo9qg.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster"
@@ -24,17 +26,29 @@ user_agents = [
 # List of proxies to rotate
 proxies = [
     "http://116.125.141.115:80",
+    "http://101.255.116.125:8080",
+    "http://116.203.28.43:80",
+    "http://103.110.10.190:3128",
+    "http://117.250.3.58:8080",
 ]
 
-# Array for the apartments
+# Empty arrays for the apartments and links
 apartments = []
 apartment_links = []
 
 
+# Handle retries
+@retry(tries=5, delay=2, backoff=2)
 def get_data(url, headers, proxy):
-    response = requests.get(url, headers=headers, proxies=proxy)
-    soup = BeautifulSoup(response.content, 'html.parser')
-    return soup
+    try:
+        response = requests.get(url, headers=headers, proxies=proxy, timeout=5)
+        response.raise_for_status()  # If the request was unsuccessful, raise an exception
+    except requests.exceptions.RequestException as e:
+        print(f"Request to {url} failed: {str(e)}")
+        raise  # Re-raise the exception so that the @retry decorator can catch it
+    else:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        return soup
 
 
 def get_listed_date(soup):
@@ -46,6 +60,7 @@ def get_listed_date(soup):
     return date.strftime('%d-%m-%y')
 
 
+# Handle pagination
 def get_next_page(soup):
     next_link = soup.find('a', class_='base__StyledAnchor-rui__ermeke-0 Bcaij next-link')
     if next_link and 'disabled' not in next_link['class']:
@@ -65,6 +80,8 @@ def main():
 
     while next_page:
         soup = get_data(next_page, headers, proxy)
+        if soup is None:  # If you're not allowed to scrape the page, skip it
+            continue
         list_of_apartments = soup.find_all('div', class_='BasePropertyCard_propertyCardWrap__30VCU')
 
         # Iterate through apartments
@@ -76,8 +93,8 @@ def main():
                 if href not in apartment_links:
                     apartment_links.append(href)
 
-        # Get the next page
-        next_page = get_next_page(soup)
+            # Get the next page
+            next_page = get_next_page(soup)
 
     for link in apartment_links:
         soup = get_data(link, headers, proxy)
@@ -95,9 +112,9 @@ def main():
 
         # Get the size of the apartment
         size_el = soup.find('span', class_='meta-value')
-        size = size_el.getText(strip=True).replace(',', '.') if size_el else 'N/A'
-        if float(size) < 5:
-            size = round(float(size) * 43560)  # Convert acres to sqft
+        size = float(size_el.getText(strip=True).replace(',', '.')) if size_el else 'N/A'
+        if size < 5:
+            size = round(float(size) * 43560, 2)  # Convert acres to sqft
 
         date = get_listed_date(soup)
 
@@ -112,6 +129,8 @@ def main():
 
         # Insert the apartment into the collection
         collection.insert_one(apartment)
+
+        time.sleep(2)
     print('Data has been scraped successfully!')
 
 
