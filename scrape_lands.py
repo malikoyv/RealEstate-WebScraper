@@ -69,6 +69,7 @@ def get_listed_date(soup):
 # Handle pagination
 def get_next_page(soup):
     next_link = soup.find('a', class_='base__StyledAnchor-rui__ermeke-0 Bcaij next-link')
+
     if next_link and 'disabled' not in next_link['class']:
         return 'https://www.realtor.com' + next_link['href']
     return None
