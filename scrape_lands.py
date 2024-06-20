@@ -91,20 +91,20 @@ def main():
 
         # Get the price
         price_el = soup.find('div', class_='Pricestyles__StyledPrice-rui__btk3ge-0 kjbIiZ sc-54acf6bc-1 VAINH')
-        price = price_el.getText(strip=True)[1:] if price_el else 'N/A'  # Remove the dollar sign and convert into text
+        price = price_el.getText(strip=True)[1:].replace(',', '') if price_el else 'N/A' # Remove the dollar sign and convert into text
 
         # Get the size of the apartment
         size_el = soup.find('span', class_='meta-value')
         size = size_el.getText(strip=True).replace(',', '.') if size_el else 'N/A'
         if float(size) < 5:
-            size = float(size) * 43560  # Convert acres to sqft
+            size = round(float(size) * 43560)  # Convert acres to sqft
 
         date = get_listed_date(soup)
 
         apartment = {
             'Title': title,
             'Location': location,
-            'Price ($)': price,
+            'Price ($)': float(price),
             'Size (sqft)': size,
             'Listing date': date,
             'URL': link
