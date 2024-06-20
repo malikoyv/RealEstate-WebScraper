@@ -53,7 +53,9 @@ def main():
 
     for apartment in list_of_apartments:
         for link in apartment.find_all('a', class_='LinkComponent_anchor__TetCm'):
-            apartment_links.append('https://www.realtor.com' + link['href'])
+            href = 'https://www.realtor.com' + link['href']
+            if href not in apartment_links:
+                apartment_links.append(href)
 
     for link in apartment_links:
         soup = get_data(link, headers, proxy)
