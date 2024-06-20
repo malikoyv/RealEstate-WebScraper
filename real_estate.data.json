@@ -1,0 +1,88 @@
+[{
+  "_id": {
+    "$oid": "6674695e1dbd08d7def1cf44"
+  },
+  "Title": "1091 Puana St, Makawao, HI 96768",
+  "Location": "1091 Puana St, Makawao, HI 96768",
+  "Price ($)": 998000,
+  "Size (sqft)": 1.204,
+  "Listing date": "18-06-2024",
+  "URL": "https://www.realtor.com/realestateandhomes-detail/1091-Puana-St_Makawao_HI_96768_M78879-17549?from=srp-list-card"
+},
+{
+  "_id": {
+    "$oid": "667469621dbd08d7def1cf45"
+  },
+  "Title": "31 Maha Rd, Makawao, HI 96768",
+  "Location": "31 Maha Rd, Makawao, HI 96768",
+  "Price ($)": 865000,
+  "Size (sqft)": 864,
+  "Listing date": "14-06-2024",
+  "URL": "https://www.realtor.com/realestateandhomes-detail/31-Maha-Rd_Makawao_HI_96768_M77324-96774?from=srp-list-card"
+},
+{
+  "_id": {
+    "$oid": "667469651dbd08d7def1cf46"
+  },
+  "Title": "810 Piiholo Rd, Makawao, HI 96768",
+  "Location": "810 Piiholo Rd, Makawao, HI 96768",
+  "Price ($)": 38000000,
+  "Size (sqft)": 173,
+  "Listing date": "12-01-2024",
+  "URL": "https://www.realtor.com/realestateandhomes-detail/810-Piiholo-Rd_Makawao_HI_96768_M97457-91193?from=srp-list-card"
+},
+{
+  "_id": {
+    "$oid": "667469691dbd08d7def1cf47"
+  },
+  "Title": "Brewer Rd, Makawao, HI 96768",
+  "Location": "Brewer Rd, Makawao, HI 96768",
+  "Price ($)": 675000,
+  "Size (sqft)": 0.35,
+  "Listing date": "05-11-2023",
+  "URL": "https://www.realtor.com/realestateandhomes-detail/Brewer-Rd_Makawao_HI_96768_M92923-99172?from=srp-list-card"
+},
+{
+  "_id": {
+    "$oid": "6674696c1dbd08d7def1cf48"
+  },
+  "Title": "37 Alohi Pl Lot B, Makawao, HI 96768",
+  "Location": "37 Alohi Pl Lot B, Makawao, HI 96768",
+  "Price ($)": 450000,
+  "Size (sqft)": 0.43,
+  "Listing date": "30-04-2024",
+  "URL": "https://www.realtor.com/realestateandhomes-detail/37-Alohi-Pl-B_Makawao_HI_96768_M93725-25456?from=srp-list-card"
+},
+{
+  "_id": {
+    "$oid": "667469701dbd08d7def1cf49"
+  },
+  "Title": "43 Puaina Pl, Makawao, HI 96768",
+  "Location": "43 Puaina Pl, Makawao, HI 96768",
+  "Price ($)": 850000,
+  "Size (sqft)": 1.237,
+  "Listing date": "11-10-2022",
+  "URL": "https://www.realtor.com/realestateandhomes-detail/43-Puaina-Pl_Makawao_HI_96768_M77081-48020?from=srp-list-card"
+},
+{
+  "_id": {
+    "$oid": "667469731dbd08d7def1cf4a"
+  },
+  "Title": "5 Kuinehe Pl Unit 3, Pukalani, HI 96768",
+  "Location": "5 Kuinehe Pl Unit 3, Pukalani, HI 96768",
+  "Price ($)": 1115000,
+  "Size (sqft)": 1.667,
+  "Listing date": "30-05-2024",
+  "URL": "https://www.realtor.com/realestateandhomes-detail/5-Kuinehe-Pl-3_Makawao_HI_96768_M77747-66775?from=srp-list-card"
+},
+{
+  "_id": {
+    "$oid": "667469761dbd08d7def1cf4b"
+  },
+  "Title": "850 Makani Rd, Makawao, HI 96768",
+  "Location": "850 Makani Rd, Makawao, HI 96768",
+  "Price ($)": 399000,
+  "Size (sqft)": 0.23,
+  "Listing date": "14-06-2024",
+  "URL": "https://www.realtor.com/realestateandhomes-detail/850-Makani-Rd_Makawao_HI_96768_M88431-79575?from=srp-list-card"
+}]
