@@ -1,100 +1,91 @@
+from datetime import datetime, timedelta
+import random
+
 from bs4 import BeautifulSoup
 import requests
 
 # Website to scrape
-base_website = "https://www.otodom.pl/pl/firmy/biura-nieruchomosci/mo-real-estate-ID7575405"
+base_website = "https://www.realtor.com/realestateandhomes-search/Makawao_HI"
 
 # Replace the headers with yours ( https://httpbin.org/get )
-headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
-}
+user_agents = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0",
+]
+
+# List of proxies to rotate
+proxies = [
+    "http://116.125.141.115:80",
+]
 
 # Array for the apartments
 apartments = []
+apartment_links = []
 
 
-def get_data(url):
-    response = requests.get(url, headers=headers)
+def get_data(url, headers, proxy):
+    response = requests.get(url, headers=headers, proxies=proxy)
     soup = BeautifulSoup(response.content, 'html.parser')
     return soup
 
 
-def get_next_page(soup):
-    page_nav = soup.find('nav', {'data-cy': 'adverts-pagination'})
-    if page_nav:
-        next_button = page_nav.find('button', {'data-cy': 'pagination.next-page'})
-        if next_button:
-            current_page_button = int(page_nav.find('button', {'aria-current': 'true'}).text)
-            next_page_url = f"{base_website}?page={current_page_button + 1}"
-            return next_page_url
-    return None
+def get_listed_date(soup):
+    days_el1 = soup.find('span', string='Time on Realtor.com')
+    days_el = days_el1.find_next('div')
+    days_ago = days_el.getText(strip=True).split(' ') if days_el else 'N/A'
+    date = datetime.now() - timedelta(days=int(days_ago[0]))
+
+    return date.strftime('%d-%m-%y')
 
 
 def main():
-    # Initial page
-    current_page_url = base_website
+    headers = {
+        "User-Agent": random.choice(user_agents),
+        "Accept-Encoding": "gzip, deflate, br, zstd",
+        "Dnt": "1",
+        "Upgrade-Insecure-Requests": "1",
+    }
+    proxy = {"http": random.choice(proxies)}
 
-    while current_page_url:
-        # Make an HTTP request GET from the server
-        soup = get_data(current_page_url)
+    soup = get_data(base_website, headers, proxy)
+    list_of_apartments = soup.find_all('div', class_='BasePropertyCard_propertyCardWrap__30VCU')
 
-        product_list = soup.find_all('li', class_='css-iq9jxc emxfic50')
+    for apartment in list_of_apartments:
+        for link in apartment.find_all('a', class_='LinkComponent_anchor__TetCm'):
+            apartment_links.append('https://www.realtor.com' + link['href'])
 
-        # Extract and print links
-        product_links = []
-        for item in product_list:
-            for link in item.find_all('a', class_='css-1qenxk6 emxfic58'):
-                # Append a link of an apartment to a list
-                product_links.append('https://www.otodom.pl' + link['href'])
+    for link in apartment_links:
+        soup = get_data(link, headers, proxy)
 
-        # Iterate through a list with links and extract information
-        for link in product_links:
-            link_response = requests.get(link, headers=headers)
-            if link_response.status_code == 200:
-                soup = BeautifulSoup(link_response.content, 'html.parser')
+        # Get the title of the apartment
+        title_el = soup.find('h1', class_='sc-6a58edfc-3 kpZRpX')
+        title = title_el.getText(strip=True) if title_el else 'N/A'
 
-                # Find a title of an apartment
-                title_el = soup.find('h1', class_='css-z95p96 ehdsj771')
-                title = title_el.getText(strip=True) if title_el else 'Title not found'
+        # Get the location
+        location = title
 
-                # Find a location
-                location_el = soup.find('a', class_='css-1jjm9oe e42rcgs1')
-                location = location_el.getText(strip=True) if location_el else 'Location not found'
+        # Get the price
+        price_el = soup.find('div', class_='Pricestyles__StyledPrice-rui__btk3ge-0 kjbIiZ sc-54acf6bc-1 VAINH')
+        price = price_el.getText(strip=True)[1:] if price_el else 'N/A'  # Remove the dollar sign and convert into text
 
-                # Find a price
-                price_el = soup.find('strong', class_='css-13baep2 e1lbt8221')
-                price = price_el.getText(strip=True) if price_el else 'Price not found'
+        # Get the size of the apartment
+        size_el = soup.find('span', class_='meta-value')
+        size = size_el.getText(strip=True) if size_el else 'N/A'
 
-                # Find a size
-                size_el = soup.find('div', class_='css-1wmudpx')
-                size = size_el.getText(strip=True) if size_el else 'Size not found'
+        date = get_listed_date(soup)
 
-                # Find a listing date
-                date_label_div = soup.find('div', attrs={'aria-label': 'Dostępne od'})
-
-                # Find the date inside this div
-                if date_label_div:
-                    date_el = date_label_div.find('div', class_='css-1wi2w6s e26jmad5')
-                    date = date_el.getText(strip=True) if date_el else 'Date not found'
-                else:
-                    date = 'Date not found'
-
-                # Save the data to a list
-                apartment = {
-                    'Title': title,
-                    'Location': location,
-                    'Price': price,
-                    'Size': size,
-                    'Listing Date': date,
-                    'URL': link
-                }
-
-                # Adding to a list of all apartments
-                apartments.append(apartment)
-
-        # Get the next page URL
-        current_page_url = get_next_page(soup)
+        apartment = {
+            'Title': title,
+            'Location': location,
+            'Price ($)': price,
+            'Size (sqft)': size,
+            'Listing date': date,
+            'URL': link
+        }
+        apartments.append(apartment)
 
     print(apartments)
+
 
 main()
