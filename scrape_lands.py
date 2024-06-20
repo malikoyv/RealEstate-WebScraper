@@ -1,8 +1,15 @@
 from datetime import datetime, timedelta
 import random
-
 from bs4 import BeautifulSoup
 import requests
+from pymongo import MongoClient
+from pymongo.server_api import ServerApi
+
+# MongoDB connection
+uri = "mongodb+srv://root:1234567890@atlascluster.hpyo9qg.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster"
+client = MongoClient(uri, server_api=ServerApi('1'))
+db = client['real_estate']
+collection = db['data']
 
 # Website to scrape
 base_website = "https://www.realtor.com/realestateandhomes-search/Makawao_HI"
@@ -39,6 +46,13 @@ def get_listed_date(soup):
     return date.strftime('%d-%m-%y')
 
 
+def get_next_page(soup):
+    next_link = soup.find('a', class_='base__StyledAnchor-rui__ermeke-0 Bcaij next-link')
+    if next_link and 'disabled' not in next_link['class']:
+        return 'https://www.realtor.com' + next_link['href']
+    return None
+
+
 def main():
     headers = {
         "User-Agent": random.choice(user_agents),
@@ -47,15 +61,23 @@ def main():
         "Upgrade-Insecure-Requests": "1",
     }
     proxy = {"http": random.choice(proxies)}
+    next_page = base_website
 
-    soup = get_data(base_website, headers, proxy)
-    list_of_apartments = soup.find_all('div', class_='BasePropertyCard_propertyCardWrap__30VCU')
+    while next_page:
+        soup = get_data(next_page, headers, proxy)
+        list_of_apartments = soup.find_all('div', class_='BasePropertyCard_propertyCardWrap__30VCU')
 
-    for apartment in list_of_apartments:
-        for link in apartment.find_all('a', class_='LinkComponent_anchor__TetCm'):
-            href = 'https://www.realtor.com' + link['href']
-            if href not in apartment_links:
-                apartment_links.append(href)
+        # Iterate through apartments
+        for apartment in list_of_apartments:
+            for link in apartment.find_all('a', class_='LinkComponent_anchor__TetCm'):
+                href = 'https://www.realtor.com' + link['href']
+
+                # Add apartment link to a list
+                if href not in apartment_links:
+                    apartment_links.append(href)
+
+        # Get the next page
+        next_page = get_next_page(soup)
 
     for link in apartment_links:
         soup = get_data(link, headers, proxy)
@@ -73,7 +95,9 @@ def main():
 
         # Get the size of the apartment
         size_el = soup.find('span', class_='meta-value')
-        size = size_el.getText(strip=True) if size_el else 'N/A'
+        size = size_el.getText(strip=True).replace(',', '.') if size_el else 'N/A'
+        if float(size) < 5:
+            size = float(size) * 43560  # Convert acres to sqft
 
         date = get_listed_date(soup)
 
@@ -85,9 +109,10 @@ def main():
             'Listing date': date,
             'URL': link
         }
-        apartments.append(apartment)
 
-    print(apartments)
+        # Insert the apartment into the collection
+        collection.insert_one(apartment)
+    print('Data has been scraped successfully!')
 
 
 main()
