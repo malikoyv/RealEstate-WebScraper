@@ -1,6 +1,6 @@
 # Real Estate Data Scraper
 
-This script scrapes real estate listings from Realtor.com for properties in Makawao, HI, and stores the data in a MongoDB database. 
+This script scrapes real estate listings from Realtor.com and stores the data in a MongoDB database. Additionally, it processes the data to categorize listings based on price per square foot and visualizes the top 5 most expensive locations.
 
 #### Prerequisites
 
@@ -11,6 +11,9 @@ Before running the script, ensure you have the following installed:
 - `beautifulsoup4` library: `pip install beautifulsoup4`
 - `pymongo` library: `pip install pymongo`
 - `retry` library: `pip install retry`
+- `pandas` library: `pip install pandas`
+- `numpy` library: `pip install numpy`
+- `matplotlib` library: `pip install matplotlib`
 
 #### MongoDB Setup
 
@@ -29,7 +32,7 @@ Before running the script, ensure you have the following installed:
    - Replace `'real_estate'` and `'data'` in the `db` and `collection` assignments with your desired database and collection names if they differ.
 
 #### Demo Video
-https://github.com/malikoyv/RealEstate-WebScraper/assets/124885789/ec9a30bc-3754-47fe-adc0-397076195d2a
+https://github.com/malikoyv/RealEstate-WebScraper/assets/124885789/c6d95d82-7322-4be6-b716-9d4f2872dd87
 #### Script Explanation
 
 The script is divided into several parts:
@@ -53,6 +56,14 @@ The script is divided into several parts:
    - Iterates through listing pages, collecting apartment links.
    - For each apartment link, fetches detailed information and stores it in MongoDB.
 
+6. **Data Processing and Visualization**:
+   - Loads data from MongoDB into a pandas DataFrame.
+   - Creates a new column for price per square foot.
+   - Groups data by location and calculates the average price per square foot.
+   - Defines thresholds to categorize listings into 'Cheap', 'Moderate', and 'Expensive'.
+   - Performs a bulk update in MongoDB to include the category field.
+   - Plots a bar chart for the top 5 most expensive locations and saves it as an image file.
+
 #### How to Run the Script
 
 1. **Install Required Libraries**:
@@ -72,6 +83,10 @@ The script is divided into several parts:
 
 4. **Check MongoDB**:
    - After running the script, check your MongoDB database to ensure the data has been inserted correctly.
+  
+5. **View the Visualization**:
+   - The bar chart for the top 5 most expensive locations will be saved as top_locations.png.
+   <img src="https://github.com/malikoyv/RealEstate-WebScraper/assets/124885789/67c860bc-b6e8-4ddf-bad7-c106a2b4ce0a" height=200px>
 
 #### Example Usage
 
