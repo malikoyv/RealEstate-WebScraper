@@ -67,6 +67,21 @@ def get_next_page(soup):
     return None
 
 
+def get_size(soup):
+    # Get the size of the apartment
+    size_el = soup.find('span', class_='meta-value')
+    size = float(size_el.getText(strip=True).replace(',', '')) if size_el else 'N/A'
+
+    # Find whether the size is in acres or sqft
+    unit_el = size_el.find_next_sibling(string=True)
+    unit = unit_el.strip() if unit_el else 'N/A'
+
+    if unit == 'acre lot':
+        size = round(float(size) * 43560)  # Convert acres to sqft
+
+    return size
+
+
 def main():
     headers = {
         "User-Agent": random.choice(user_agents),
@@ -113,20 +128,13 @@ def main():
         price_el = soup.find('div', class_='Pricestyles__StyledPrice-rui__btk3ge-0 kjbIiZ sc-54acf6bc-1 VAINH')
         price = price_el.getText(strip=True)[1:].replace(',', '') if price_el else 'N/A' # Remove the dollar sign and convert into text
 
-        # Get the size of the apartment
-        size_el = soup.find('span', class_='meta-value')
-        size = float(size_el.getText(strip=True).replace(',', '')) if size_el else 'N/A'
-
-        if size < 3:  # If size is in acres
-            size = round(float(size) * 43560, 2)  # Convert acres to sqft
-
         date = get_listed_date(soup)
 
         apartment = {
             'Title': title,
             'Location': location,
             'Price ($)': float(price),
-            'Size (sqft)': size,
+            'Size (sqft)': get_size(soup),
             'Listing date': date,
             'URL': link
         }
@@ -135,7 +143,7 @@ def main():
         collection.insert_one(apartment)
 
         # Delay after a land scraping
-        time.sleep(1)
+        time.sleep(3)
     print('Data has been scraped successfully!')
 
 

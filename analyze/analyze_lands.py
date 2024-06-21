@@ -1,8 +1,9 @@
 import pandas as pd
 from pymongo import UpdateOne
 
-from config import collection
+from scraper.config import collection
 import numpy as np
+import matplotlib.pyplot as plt
 
 # Load data from MongoDB
 data = pd.DataFrame(list(collection.find()))
@@ -13,7 +14,6 @@ data['Price per sqft ($)'] = round(data['Price ($)'] / data['Size (sqft)'])
 # Group by location and calculate the average price per sqft
 avg_price_per_sqft = data.groupby('Location')['Price per sqft ($)'].mean().sort_values(ascending=False)
 top_5 = avg_price_per_sqft.head(5)  # Get the top 5 expensive locations
-print(top_5)
 
 # Calculate the mean and standard deviation of the price per sqft
 mean_price_per_sqft = np.mean(avg_price_per_sqft)
@@ -46,3 +46,16 @@ bulk_updates = [
 collection.bulk_write([UpdateOne(update['filter'], update['update']) for update in bulk_updates])
 
 print('Data has been categorized and updated successfully!')
+
+# Plotting the bar chart for the top 5 most expensive locations
+plt.figure(figsize=(10, 6))
+top_5.plot(kind='bar', color='skyblue')
+plt.title('Average Price per Square Foot for Top 5 Most Expensive Locations')
+plt.xlabel('Location')
+plt.ylabel('Average Price per Square Foot ($)')
+plt.xticks(rotation=45, ha='right')
+plt.tight_layout()
+
+# Save the plot as an image file
+plt.savefig('top_locations.png')
+plt.show()
