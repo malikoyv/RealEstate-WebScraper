@@ -1,4 +1,6 @@
 import pandas as pd
+from pymongo import UpdateOne
+
 from config import collection
 import numpy as np
 
@@ -31,7 +33,16 @@ thresholds.sort()
 data['Category'] = pd.cut(data['Price per sqft ($)'], bins=thresholds,
                           labels=['Cheap', 'Moderate', 'Expensive'])
 
-# Update the MongoDB collection with the new category
-for _, row in data.iterrows():
-    collection.update_one({'_id': row['_id']}, {'$set': {'Category': row['Category']}})
-print('Data has been categorized successfully!')
+# Perform the migration by updating MongoDB documents with the new 'Category' field
+bulk_updates = [
+    {
+        'filter': {'_id': row['_id']},
+        'update': {'$set': {'Category': row['Category']}}
+    }
+    for _, row in data.iterrows()
+]
+
+# Execute bulk updates in MongoDB
+collection.bulk_write([UpdateOne(update['filter'], update['update']) for update in bulk_updates])
+
+print('Data has been categorized and updated successfully!')
