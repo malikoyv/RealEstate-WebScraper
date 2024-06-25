@@ -1,42 +1,6 @@
 [{
   "_id": {
-    "$oid": "6675ccf7195e3d805a2ed019"
-  },
-  "Title": "1091 Puana St, Makawao, HI 96768",
-  "Location": "1091 Puana St, Makawao, HI 96768",
-  "Price ($)": 998000,
-  "Size (sqft)": 1204,
-  "Listing date": "18-06-2024",
-  "URL": "https://www.realtor.com/realestateandhomes-detail/1091-Puana-St_Makawao_HI_96768_M78879-17549?from=srp-list-card",
-  "Category": "Expensive"
-},
-{
-  "_id": {
-    "$oid": "6675ccfc195e3d805a2ed01a"
-  },
-  "Title": "31 Maha Rd, Makawao, HI 96768",
-  "Location": "31 Maha Rd, Makawao, HI 96768",
-  "Price ($)": 865000,
-  "Size (sqft)": 864,
-  "Listing date": "14-06-2024",
-  "URL": "https://www.realtor.com/realestateandhomes-detail/31-Maha-Rd_Makawao_HI_96768_M77324-96774?from=srp-list-card",
-  "Category": "Expensive"
-},
-{
-  "_id": {
-    "$oid": "6675cd00195e3d805a2ed01b"
-  },
-  "Title": "810 Piiholo Rd, Makawao, HI 96768",
-  "Location": "810 Piiholo Rd, Makawao, HI 96768",
-  "Price ($)": 38000000,
-  "Size (sqft)": 7535880,
-  "Listing date": "12-01-2024",
-  "URL": "https://www.realtor.com/realestateandhomes-detail/810-Piiholo-Rd_Makawao_HI_96768_M97457-91193?from=srp-list-card",
-  "Category": "Cheap"
-},
-{
-  "_id": {
-    "$oid": "6675cd05195e3d805a2ed01c"
+    "$oid": "667b2af58374e74e6d6679db"
   },
   "Title": "Brewer Rd, Makawao, HI 96768",
   "Location": "Brewer Rd, Makawao, HI 96768",
@@ -48,7 +12,7 @@
 },
 {
   "_id": {
-    "$oid": "6675cd09195e3d805a2ed01d"
+    "$oid": "667b2afb8374e74e6d6679dc"
   },
   "Title": "37 Alohi Pl Lot B, Makawao, HI 96768",
   "Location": "37 Alohi Pl Lot B, Makawao, HI 96768",
@@ -60,19 +24,7 @@
 },
 {
   "_id": {
-    "$oid": "6675cd0e195e3d805a2ed01e"
-  },
-  "Title": "43 Puaina Pl, Makawao, HI 96768",
-  "Location": "43 Puaina Pl, Makawao, HI 96768",
-  "Price ($)": 850000,
-  "Size (sqft)": 1237,
-  "Listing date": "11-10-2022",
-  "URL": "https://www.realtor.com/realestateandhomes-detail/43-Puaina-Pl_Makawao_HI_96768_M77081-48020?from=srp-list-card",
-  "Category": "Moderate"
-},
-{
-  "_id": {
-    "$oid": "6675cd13195e3d805a2ed01f"
+    "$oid": "667b2aff8374e74e6d6679dd"
   },
   "Title": "850 Makani Rd, Makawao, HI 96768",
   "Location": "850 Makani Rd, Makawao, HI 96768",
@@ -84,13 +36,145 @@
 },
 {
   "_id": {
-    "$oid": "6675cd18195e3d805a2ed020"
+    "$oid": "667b2b038374e74e6d6679de"
   },
-  "Title": "5 Kuinehe Pl Unit 3, Pukalani, HI 96768",
-  "Location": "5 Kuinehe Pl Unit 3, Pukalani, HI 96768",
-  "Price ($)": 1115000,
-  "Size (sqft)": 1667,
-  "Listing date": "30-05-2024",
-  "URL": "https://www.realtor.com/realestateandhomes-detail/5-Kuinehe-Pl-3_Makawao_HI_96768_M77747-66775?from=srp-list-card",
+  "Title": "Makana Rd, Makawao, HI 96768",
+  "Location": "Makana Rd, Makawao, HI 96768",
+  "Price ($)": 1395000,
+  "Size (sqft)": 265716,
+  "Listing date": "30-04-2024",
+  "URL": "https://www.realtor.com/realestateandhomes-detail/Makana-Rd_Makawao_HI_96768_M96453-99202?from=srp-list-card",
+  "Category": "Moderate"
+},
+{
+  "_id": {
+    "$oid": "667b2b088374e74e6d6679df"
+  },
+  "Title": "1040 Olinda Rd, Makawao, HI 96768",
+  "Location": "1040 Olinda Rd, Makawao, HI 96768",
+  "Price ($)": 2175000,
+  "Size (sqft)": 230868,
+  "Listing date": "03-11-2023",
+  "URL": "https://www.realtor.com/realestateandhomes-detail/1040-Olinda-Rd_Makawao_HI_96768_M95805-56401?from=srp-list-card",
+  "Category": "Moderate"
+},
+{
+  "_id": {
+    "$oid": "667b2b0f8374e74e6d6679e0"
+  },
+  "Title": "2450 Baldwin Ave Lot B, Makawao, HI 96768",
+  "Location": "2450 Baldwin Ave Lot B, Makawao, HI 96768",
+  "Price ($)": 996000,
+  "Size (sqft)": 733550,
+  "Listing date": "16-05-2022",
+  "URL": "https://www.realtor.com/realestateandhomes-detail/2450-Baldwin-Ave-B_Makawao_HI_96768_M96478-99759?from=srp-list-card",
+  "Category": "Moderate"
+},
+{
+  "_id": {
+    "$oid": "667b2b148374e74e6d6679e1"
+  },
+  "Title": "1581 Haliimaile Rd Unit B, Makawao, HI 96768",
+  "Location": "1581 Haliimaile Rd Unit B, Makawao, HI 96768",
+  "Price ($)": 1500000,
+  "Size (sqft)": 57935,
+  "Listing date": "11-06-2024",
+  "URL": "https://www.realtor.com/realestateandhomes-detail/1581-Haliimaile-Rd-B_Makawao_HI_96768_M97815-96999?from=srp-list-card",
+  "Category": "Moderate"
+},
+{
+  "_id": {
+    "$oid": "667b2b188374e74e6d6679e2"
+  },
+  "Title": "642 Kauna Lipo Dr Lot 21, Wailuku, HI 96793",
+  "Location": "642 Kauna Lipo Dr Lot 21, Wailuku, HI 96793",
+  "Price ($)": 735000,
+  "Size (sqft)": 19166,
+  "Listing date": "05-06-2024",
+  "URL": "https://www.realtor.com/realestateandhomes-detail/642-Kauna-Lipo-Dr-Lot-21_Wailuku_HI_96793_M99044-84188?from=srp-list-card",
+  "Category": "Moderate"
+},
+{
+  "_id": {
+    "$oid": "667b2b1c8374e74e6d6679e3"
+  },
+  "Title": "3737 Kahekili Hwy, Wailuku, HI 96793",
+  "Location": "3737 Kahekili Hwy, Wailuku, HI 96793",
+  "Price ($)": 573100,
+  "Size (sqft)": 148975,
+  "Listing date": "26-04-2024",
+  "URL": "https://www.realtor.com/realestateandhomes-detail/3737-Kahekili-Hwy_Wailuku_HI_96793_M98553-27850?from=srp-list-card",
+  "Category": "Moderate"
+},
+{
+  "_id": {
+    "$oid": "667b2b218374e74e6d6679e4"
+  },
+  "Title": "2762 Hana Hwy Lot B, Haiku, HI 96708",
+  "Location": "2762 Hana Hwy Lot B, Haiku, HI 96708",
+  "Price ($)": 379000,
+  "Size (sqft)": 73616,
+  "Listing date": "19-03-2024",
+  "URL": "https://www.realtor.com/realestateandhomes-detail/2762-Hana-Hwy-B_Haiku_HI_96708_M94449-95433?from=srp-list-card",
+  "Category": "Moderate"
+},
+{
+  "_id": {
+    "$oid": "667b2b258374e74e6d6679e5"
+  },
+  "Title": "5000 B-2 Makena Kihei Rd Lot 1, HI 96753",
+  "Location": "5000 B-2 Makena Kihei Rd Lot 1, HI 96753",
+  "Price ($)": 9800000,
+  "Size (sqft)": 16988,
+  "Listing date": "22-11-2023",
+  "URL": "https://www.realtor.com/realestateandhomes-detail/5000-B-2-Makena-Kihei-Rd-Lot-1_HI_96753_M99019-45251?from=srp-list-card",
+  "Category": "Expensive"
+},
+{
+  "_id": {
+    "$oid": "667b2b298374e74e6d6679e6"
+  },
+  "Title": "Haumana Rd Unit A, Haiku, HI 96708",
+  "Location": "Haumana Rd Unit A, Haiku, HI 96708",
+  "Price ($)": 1700000,
+  "Size (sqft)": 229997,
+  "Listing date": "24-04-2024",
+  "URL": "https://www.realtor.com/realestateandhomes-detail/Haumana-Rd-Unit-A_Haiku_HI_96708_M95902-19819?from=srp-list-card",
+  "Category": "Moderate"
+},
+{
+  "_id": {
+    "$oid": "667b2b2e8374e74e6d6679e7"
+  },
+  "Title": "124 Hokai Pl Lot 20, Kihei, HI 96753",
+  "Location": "124 Hokai Pl Lot 20, Kihei, HI 96753",
+  "Price ($)": 949000,
+  "Size (sqft)": 7892,
+  "Listing date": "24-06-2024",
+  "URL": "https://www.realtor.com/realestateandhomes-detail/124-Hokai-Pl-20_Kihei_HI_96753_M92896-79938?from=srp-list-card",
+  "Category": "Moderate"
+},
+{
+  "_id": {
+    "$oid": "667b2b328374e74e6d6679e8"
+  },
+  "Title": "Haiku Rd, Haiku, HI 96708",
+  "Location": "Haiku Rd, Haiku, HI 96708",
+  "Price ($)": 599000,
+  "Size (sqft)": 12197,
+  "Listing date": "19-05-2024",
+  "URL": "https://www.realtor.com/realestateandhomes-detail/Haiku-Rd_Haiku_HI_96708_M95878-68676?from=srp-list-card",
+  "Category": "Moderate"
+},
+{
+  "_id": {
+    "$oid": "667b2b368374e74e6d6679e9"
+  },
+  "Title": "25 Hoihoi Pl Lot B, Kula, HI 96790",
+  "Location": "25 Hoihoi Pl Lot B, Kula, HI 96790",
+  "Price ($)": 700000,
+  "Size (sqft)": 21780,
+  "Listing date": "07-03-2024",
+  "URL": "https://www.realtor.com/realestateandhomes-detail/25-Hoihoi-Pl-B_Kula_HI_96790_M92577-10607?from=srp-list-card",
   "Category": "Moderate"
 }]

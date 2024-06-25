@@ -6,8 +6,11 @@ import requests
 from retry import retry
 from config import collection
 
+payload = { 'api_key': 'c76de47d5f74419c14da1ee0df1ecec6', 'url': 'https://www.realtor.com/realestateandhomes-search/Makawao_HI/type-land/' }
+r = requests.get('https://api.scraperapi.com/', params=payload)
+
 # Website to scrape
-base_website = "https://www.realtor.com/realestateandhomes-search/Makawao_HI"
+base_website = "https://www.realtor.com/realestateandhomes-search/Makawao_HI/type-land/"
 
 # User Agents to rotate to avoid getting blocked
 user_agents = [
@@ -25,9 +28,8 @@ proxies = [
     "http://117.250.3.58:8080",
 ]
 
-# Empty arrays for the apartments and links
-apartments = []
-apartment_links = []
+# Empty arrays for the land and links
+land_links = []
 
 
 # Handle retries
@@ -44,36 +46,35 @@ def get_data(url, headers, proxy):
         return soup
 
 
-# Get the date the apartment was listed
+# Get the date the land was listed
 def get_listed_date(soup):
-    # Find a when the land was posted
+    # Find when the land was posted
     days_el1 = soup.find('span', string='Time on Realtor.com')
-    days_el = days_el1.find_next('div')
+    days_el = days_el1.find_next('div') if days_el1 else None
     # Get only days
     days_ago = days_el.getText(strip=True).split(' ') if days_el else 'N/A'
     # Calculate the date when it was listed
-    date = datetime.now() - timedelta(days=int(days_ago[0]))
+    date = datetime.now() - timedelta(days=int(days_ago[0])) if days_ago != 'N/A' else datetime.now()
 
     # Return the date in the format dd-mm-yy
     return date.strftime('%d-%m-%Y')
 
 
 # Handle pagination
-def get_next_page(soup):
+def get_next_page(soup, page_number):
     next_link = soup.find('a', class_='base__StyledAnchor-rui__ermeke-0 Bcaij next-link')
-
-    if next_link and 'disabled' not in next_link['class']:
-        return 'https://www.realtor.com' + next_link['href']
+    if next_link and 'disabled' not in next_link.get('class', []):
+        return base_website + "pg-" + page_number
     return None
 
 
 def get_size(soup):
-    # Get the size of the apartment
+    # Get the size of the land
     size_el = soup.find('span', class_='meta-value')
     size = float(size_el.getText(strip=True).replace(',', '')) if size_el else 'N/A'
 
     # Find whether the size is in acres or sqft
-    unit_el = size_el.find_next_sibling(string=True)
+    unit_el = size_el.find_next_sibling(string=True) if size_el else None
     unit = unit_el.strip() if unit_el else 'N/A'
 
     if unit == 'acre lot':
@@ -89,62 +90,58 @@ def main():
         "Dnt": "1",
         "Upgrade-Insecure-Requests": "1",
     }
-    # Rotate proxies
     proxy = {"http": random.choice(proxies)}
     next_page = base_website
+    page_count = 1
+    max_pages = 3  # Adjust this value to scrape more or fewer pages
 
-    # Redirecting to the next pages
-    while next_page:
+    while next_page and page_count < max_pages:
+        print(f"Scraping page {page_count}")
         soup = get_data(next_page, headers, proxy)
-        if soup is None:  # If you're not allowed to scrape the page, skip it
-            continue
 
-        # Find all "cards" of the apartments
-        list_of_apartments = soup.find_all('div', class_='BasePropertyCard_propertyCardWrap__30VCU')
+        list_of_lands = soup.find_all('div', class_='BasePropertyCard_propertyCardWrap__30VCU')
 
-        # Iterate through apartments
-        for apartment in list_of_apartments:
-            for link in apartment.find_all('a', class_='LinkComponent_anchor__TetCm'):
+        for land in list_of_lands:
+            for link in land.find_all('a', class_='LinkComponent_anchor__TetCm'):
                 href = 'https://www.realtor.com' + link['href']
+                if href not in land_links:
+                    land_links.append(href)
 
-                # Add apartment link to a list
-                if href not in apartment_links:
-                    apartment_links.append(href)
+        next_page = get_next_page(soup, page_count)
+        if next_page:
+            page_count += 1
+        time.sleep(random.uniform(2, 5))  # Add a random delay between page requests
 
-            # Get the next page
-            next_page = get_next_page(soup)
+    print(f"Found {len(land_links)} land listings across {page_count} pages")
 
-    for link in apartment_links:
+    for index, link in enumerate(land_links):
+        print(f"Scraping listing {index + 1} of {len(land_links)}")
         soup = get_data(link, headers, proxy)
 
-        # Get the title of the apartment
         title_el = soup.find('h1', class_='sc-6a58edfc-3 kpZRpX')
         title = title_el.getText(strip=True) if title_el else 'N/A'
 
-        # Get the location
         location = title
 
-        # Get the price
         price_el = soup.find('div', class_='Pricestyles__StyledPrice-rui__btk3ge-0 kjbIiZ sc-54acf6bc-1 VAINH')
-        price = price_el.getText(strip=True)[1:].replace(',', '') if price_el else 'N/A' # Remove the dollar sign and convert into text
+        price = price_el.getText(strip=True)[1:].replace(',', '') if price_el else 'N/A'
 
         date = get_listed_date(soup)
 
-        apartment = {
+        land = {
             'Title': title,
             'Location': location,
-            'Price ($)': float(price),
+            'Price ($)': float(price) if price != 'N/A' else 'N/A',
             'Size (sqft)': get_size(soup),
             'Listing date': date,
             'URL': link
         }
 
-        # Insert the apartment into the collection
-        collection.insert_one(apartment)
+        collection.insert_one(land)
 
-        # Delay after a land scraping
-        time.sleep(3)
+        time.sleep(random.uniform(3, 6))  # Add a random delay between listing scrapes
+
     print('Data has been scraped successfully!')
 
-
-main()
+if __name__ == "__main__":
+    main()
